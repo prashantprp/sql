@@ -1,0 +1,16 @@
+begin
+DECLARE C3 CURSOR LOCAL
+    FOR select CONCAT('DROP TABLE ',TABLE_SCHEMA,'.',TABLE_NAME) drptable  
+ from information_schema.tables where table_schema NOT IN ('TW')
+ DECLARE @VEXECSQL NVARCHAR(MAX);
+ open C3;
+ FETCH NEXT FROM C3 INTO @VEXECSQL;
+ WHILE @@FETCH_STATUS = 0
+	begin
+		PRINT(@VEXECSQL)   
+		EXECUTE sp_executesql @VEXECSQL;
+		FETCH NEXT FROM C3 INTO @VEXECSQL;
+	end;
+close C3;
+DEALLOCATE C3;
+END;
